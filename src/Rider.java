@@ -5,18 +5,19 @@ public class Rider extends Thread {
     private Semaphore bus;
     private Semaphore boarded;
     private Semaphore mutex;
-    private long riderId;
+    private static volatile int spawnedRiderCount = 0;
+    private int riderId;
 
     public Rider(BusHalt busHalt){
         this.busHalt = busHalt;
         this.bus = busHalt.getBus();
         this.boarded = busHalt.getBoarded();
         this. mutex = busHalt.getMutex();
-        riderId = Thread.currentThread().getId();
     }
 
     @Override
     public void run(){
+        riderId = spawnedRiderCount++;
         try {
             mutex.acquire();
         } catch (InterruptedException e) {

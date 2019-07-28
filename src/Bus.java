@@ -5,27 +5,31 @@ public class Bus extends Thread {
     private Semaphore bus;
     private Semaphore boarded;
     private Semaphore mutex;
-    private long busId;
+    private static volatile int spawnedBusCount = 0;
+    private int busId;
+    private int passengerCount;
 
     public Bus(BusHalt busHalt) {
         this.busHalt = busHalt;
         this.bus = busHalt.getBus();
         this.boarded = busHalt.getBoarded();
         this. mutex = busHalt.getMutex();
-        busId = Thread.currentThread().getId();
+        passengerCount = 0;
     }
 
     @Override
     public void run() {
+        busId = spawnedBusCount++;
+
         try {
             mutex.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("Bus " + busId + " has arrived at the bus halt");
-        int n = Math.min(busHalt.getWaitingCount(), 50);
+        passengerCount = Math.min(busHalt.getWaitingCount(), 50);
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < passengerCount; i++) {
             bus.release();
             try {
                 boarded.acquire();
@@ -37,11 +41,9 @@ public class Bus extends Thread {
         mutex.release();
 
         depart();
-
     }
 
     private void depart() {
-        System.out.println("Bus " + busId + " has departed");
+        System.out.format("Bus %d has departed with %d passengers\n", busId, passengerCount);
     }
-
 }

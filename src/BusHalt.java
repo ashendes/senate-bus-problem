@@ -2,7 +2,7 @@ import java.util.concurrent.Semaphore;
 
 public class BusHalt {
 
-    private static BusHalt busHalt = null;
+    private static volatile BusHalt busHalt = null;
 
     private int waitingCount;
 

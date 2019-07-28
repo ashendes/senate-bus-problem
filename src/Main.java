@@ -6,23 +6,21 @@ public class Main {
 
         BusHalt busHalt = BusHalt.getBusHalt(0);
 
-        System.out.print("Enter the number of riders: ");
+//        System.out.print("Enter the number of riders: ");
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
+//        int n = sc.nextInt();
 
         System.out.println("Senate Bus initiated...");
 
-        for(int i = 0; i < n; i++){
-            new Rider(busHalt);
-        }
+        new RiderScheduler(busHalt).start();
 
-        new Bus(busHalt);
+        new BusScheduler(busHalt).start();
 
         // Program Termination with a user input
-        String _;
+        int _;
         while(true){
-            _ = sc.nextLine();
-            if(_ != null)
+            _ = sc.nextInt();
+            if(_ != 0)
                 System.exit(0);
         }
 
