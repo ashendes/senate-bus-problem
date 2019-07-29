@@ -1,13 +1,24 @@
 import java.util.concurrent.Semaphore;
 
+/**
+ *  Class for keeping track of arrived riders and
+ *  for controlling semaphore distribution
+ */
 public class BusHalt {
 
+    // Singleton instance of BusHalt
     private static volatile BusHalt busHalt = null;
 
+    // Number of riders waiting to board a bus
     private int waitingCount;
 
+    // Mutex for controlling updates of waitingCount
     private final Semaphore mutex = new Semaphore(1);
+
+    // Semaphore to indicating arrival of bus
     private final Semaphore bus = new Semaphore(0);
+
+    // Semaphore to indicate that bus has finished boarding
     private final Semaphore boarded = new Semaphore(0);
 
     private BusHalt(int count){

@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class BusScheduler extends Thread {
 
-    private static final long busMeanArrivalTime = 50 * 1000;
+    private static final long busMeanArrivalTime = 20 * 1000;
     private BusHalt busHalt;
     private long nextArrivalTime;
     private Random random;
@@ -16,21 +16,23 @@ public class BusScheduler extends Thread {
     public void run() {
 
         while (!Thread.currentThread().isInterrupted()) {
-            Bus bus = new Bus(busHalt);
-            bus.start();
-
-            nextArrivalTime = calculateNextArrivalTime();
-
+            nextArrivalTime = calculateNextArrivalTime(busMeanArrivalTime);
+            System.out.println(nextArrivalTime);
             try {
-                Thread.sleep(20000);
+                Thread.sleep(nextArrivalTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            Bus bus = new Bus(busHalt);
+            bus.start();
         }
     }
 
-    private long calculateNextArrivalTime(){
-        float lambda = 1 / busMeanArrivalTime;
-        return Math.round(-Math.log(1 - random.nextFloat()) / lambda);
+    // Calculating a randomized time based on mean arrival time
+    private long calculateNextArrivalTime(long meanArrivalTime) {
+//        float lambda = 1 / busMeanArrivalTime;
+//        return Math.round(-Math.log(1 - random.nextFloat()) / lambda);
+        return meanArrivalTime;
     }
 }
